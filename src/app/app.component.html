@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game</title>
+</head>
+
+<body>
+  <div class="button_wrap">
+    <a class="button" (click)="play(playerType.scissors)">剪刀</a>
+    <a class="button" (click)="play(playerType.rock)">石頭</a>
+    <a class="button" (click)="play(playerType.paper)">布</a>
+  </div>
+  <button class="reset" (click)="Reset()">重置</button>
+  <div>
+    <div class="message_wrap">
+      <h2 class="message" [class]="{
+              win:this.gameApiService.logList[0].nowResult === gameResult.Player,
+              lose:this.gameApiService.logList[0].nowResult === gameResult.Bot,
+              draw:this.gameApiService.logList[0].nowResult === gameResult.Draw
+            }">
+        {{ lastGameResult }}</h2>
+    </div>
+  </div>
+  <div>
+    <div class="bot">{{ lastBotType }}</div>
+  </div>
+  <div class="log_wrap">
+    <div class="log">勝:{{ playerAllCount.get(gameResult.Player) }}</div>
+    <div class="log">平手:{{ playerAllCount.get(gameResult.Draw) }}</div>
+    <div class="log">敗:{{ playerAllCount.get(gameResult.Bot) }}</div>
+  </div>
+  <div class="message_wrap">
+    <table>
+      <th class="message">對戰紀錄:</th>
+      <tr class="message" *ngFor="let item of logList">
+        <td class="message" [class]="{
+            win:item.nowResult == gameResult.Player,
+            lose:item.nowResult == gameResult.Bot,
+            draw:item.nowResult == gameResult.Draw
+          }">
+          {{ "bot出" + playerTypeString.get(item.botType) }}
+          {{ "你出" + playerTypeString.get(item.playerType) }}
+          <b> {{ gameResultString.get(item.nowResult) }} </b>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+
+</html>
