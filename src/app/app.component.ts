@@ -1,6 +1,8 @@
+import { PartManager } from './@services/PartManager.class';
 import { Component } from '@angular/core';
 import { GameResult, PlayerType } from './@models/game.model';
 import { GameApiService } from './@services/game-api.service';
+import { Part } from './@services/Part.class';
 
 @Component({
   selector: 'app-root',
@@ -9,41 +11,79 @@ import { GameApiService } from './@services/game-api.service';
 })
 
 export class AppComponent {
-  title = 'angularGame';
-  playerType = PlayerType;
+  PlayerType = PlayerType;
   gameResult = GameResult;
   playerTypeString = new Map<PlayerType, String>([[PlayerType.scissors, "剪刀"], [PlayerType.rock, "石頭"], [PlayerType.paper, "布"]]);
   gameResultString = new Map<GameResult, String>([[GameResult.Bot, "你輸了!"], [GameResult.Draw, "和局!"], [GameResult.Player, "你贏了!"]]);
 
-  constructor(public gameApiService: GameApiService) { }
+  constructor(public gameApiService: GameApiService, private partManager: PartManager) { }
 
-  //全勝敗紀錄
-  get playerAllCount(){
-    return this.gameApiService.WinMap
-  }
-  //機器人出的拳
-  get lastBotType() {
-    if (this.gameApiService.logList[0] == undefined)
-      return "準備"
-    else
-      return this.playerTypeString.get(this.gameApiService.logList[0].botType)
-  }
-  //對戰結果顯示
-  get lastGameResult() {
-    if (this.gameApiService.logList[0] == undefined)
-      return "你好!點擊上方按鈕選擇出拳"
+
+  //玩家1結算畫面
+  get playerResult() {
+    if (this.partManager.parts.length == 1)
+      return { gameResult: GameResult.Draw, resultString: "你好!點擊上方按鈕選擇出拳" }
     else {
-      return this.gameResultString.get(this.gameApiService.logList[0].nowResult)
+      if (this.partManager.parts[1].winner.length == this.partManager.parts[0].totalPlayers)
+        return { gameResult: GameResult.Draw, resultString: "和局" }
+      else if (this.partManager.parts[1].winner.some(e => e.name =='Player1'))
+        return { gameResult: GameResult.Player, resultString: "P1贏了!" }
+      else
+        return { gameResult: GameResult.Bot, resultString: "P1輸了!" }
     }
   }
-  //對戰紀錄
-  get logList(): { nowResult: GameResult, playerType: PlayerType, botType: PlayerType }[] {
-    return this.gameApiService.logList
-  }
-  play(userType: number) {
-    this.gameApiService.start(userType);
+  //玩家2結算畫面
+  get playerResult2() {
+    if (this.partManager.parts.length == 1)
+      return { gameResult: GameResult.Draw, resultString: "你好!點擊上方按鈕選擇出拳" }
+    else {
+      if (this.partManager.parts[1].winner.length == this.partManager.parts[0].totalPlayers)
+        return { gameResult: GameResult.Draw, resultString: "和局" }
+      else if (this.partManager.parts[1].winner.some(e => e.name == 'Player2'))
+        return { gameResult: GameResult.Player, resultString: "P2贏了!" }
+      else
+        return { gameResult: GameResult.Bot, resultString: "P2輸了!" }
+    }
   }
 
+
+  //Bot1出的拳
+  get lastBotPlayerType() {
+    if (this.partManager.parts.length <= 1)
+      return "Bot1"
+    else
+      return this.playerTypeString.get(this.partManager.parts[1].botsTypes[0])
+  }
+  //Bot2出的拳
+  get lastBotPlayerType2() {
+    if (this.partManager.parts.length <= 1)
+      return "Bot2"
+    else
+      return this.playerTypeString.get(this.partManager.parts[1].botsTypes[1])
+  }
+  //玩家1資訊
+  get Player1() {
+    return this.partManager.players[0]
+  }
+  //玩家2資訊
+  get Player2() {
+    return this.partManager.players[1]
+  }
+  //對戰紀錄
+  get resultHistory() {
+    return this.partManager.parts.slice(1, this.partManager.parts.length)
+  }
+
+
+
+  Play1(type: PlayerType) {
+    this.gameApiService.Play1(type);
+  }
+
+
+  Play2(type: PlayerType) {
+    this.gameApiService.Play2(type);
+  }
 
   Reset() {
     //重置按鈕

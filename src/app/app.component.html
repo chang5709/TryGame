@@ -9,46 +9,80 @@
 </head>
 
 <body>
+  <h2>Player1</h2>
   <div class="button_wrap">
-    <a class="button" (click)="play(playerType.scissors)">剪刀</a>
-    <a class="button" (click)="play(playerType.rock)">石頭</a>
-    <a class="button" (click)="play(playerType.paper)">布</a>
+    <a class="button" (click)="Play1(PlayerType.scissors)">剪刀</a>
+    <a class="button" (click)="Play1(PlayerType.rock)">石頭</a>
+    <a class="button" (click)="Play1(PlayerType.paper)">布</a>
   </div>
-  <button class="reset" (click)="Reset()">重置</button>
+  <h2>Player2</h2>
+  <div class="button_wrap">
+    <a class="button" (click)="Play2(PlayerType.scissors)">剪刀</a>
+    <a class="button" (click)="Play2(PlayerType.rock)">石頭</a>
+    <a class="button" (click)="Play2(PlayerType.paper)">布</a>
+  </div>
   <div>
     <div class="message_wrap">
       <h2 class="message" [class]="{
-              win:this.gameApiService.logList[0].nowResult === gameResult.Player,
-              lose:this.gameApiService.logList[0].nowResult === gameResult.Bot,
-              draw:this.gameApiService.logList[0].nowResult === gameResult.Draw
-            }">
-        {{ lastGameResult }}</h2>
+                win: playerResult.gameResult === gameResult.Player,
+                lose: playerResult.gameResult === gameResult.Bot,
+                draw: playerResult.gameResult === gameResult.Draw}">
+        {{ playerResult.resultString }}
+      </h2>
+    </div>
+    <div class="message_wrap">
+      <h2 class="message" [class]="{
+                win: playerResult2.gameResult === gameResult.Player,
+                lose: playerResult2.gameResult === gameResult.Bot,
+                draw: playerResult2.gameResult === gameResult.Draw}">
+        {{ playerResult2.resultString }}
+      </h2>
     </div>
   </div>
   <div>
-    <div class="bot">{{ lastBotType }}</div>
+    <div class="bot_wrap">
+      <div class="bot">{{ lastBotPlayerType }}</div>
+      <div class="bot">{{ lastBotPlayerType2 }}</div>
+    </div>
+    <button class="reset" (click)="Reset()">重置</button>
   </div>
+  <h3>Player1</h3>
   <div class="log_wrap">
-    <div class="log">勝:{{ playerAllCount.get(gameResult.Player) }}</div>
-    <div class="log">平手:{{ playerAllCount.get(gameResult.Draw) }}</div>
-    <div class="log">敗:{{ playerAllCount.get(gameResult.Bot) }}</div>
+    <div class="log">勝:{{ Player1.winCount }}</div>
+    <div class="log">平手:{{ Player1.drawCount }}</div>
+    <div class="log">敗:{{ Player1.loseCount }}</div>
   </div>
+  <h3>Player2</h3>
+  <div class="log_wrap">
+    <div class="log">勝:{{ Player2.winCount }}</div>
+    <div class="log">平手:{{ Player2.drawCount }}</div>
+    <div class="log">敗:{{ Player2.loseCount }}</div>
+  </div>
+
   <div class="message_wrap">
     <table>
       <th class="message">對戰紀錄:</th>
-      <tr class="message" *ngFor="let item of logList">
-        <td class="message" [class]="{
-            win:item.nowResult == gameResult.Player,
-            lose:item.nowResult == gameResult.Bot,
-            draw:item.nowResult == gameResult.Draw
-          }">
-          {{ "bot出" + playerTypeString.get(item.botType) }}
-          {{ "你出" + playerTypeString.get(item.playerType) }}
-          <b> {{ gameResultString.get(item.nowResult) }} </b>
+      <tr class="message" *ngFor="let item of resultHistory; let i=index" >
+        <td class="message">
+          {{ "Bot1出" + playerTypeString.get(item.botsTypes[0]) }}
+          {{ "Bot2出" + playerTypeString.get(item.botsTypes[1]) }}
+          {{ "P1出" + playerTypeString.get(item.playersTypes[0]) }}
+          {{ "P2出" + playerTypeString.get(item.playersTypes[1]) }}
+          <b>
+            <label *ngIf="item.winner.length == item.totalPlayers; else notDraw">
+              和局
+            </label>
+            <ng-template #notDraw>
+              勝者為:
+              <label *ngFor="let item2 of item.winner">
+                {{ item2.name }}
+              </label>
+            </ng-template>
+          </b>
+          <!-- <button class="delete" (click)="Delete(i)">X</button> -->
         </td>
       </tr>
     </table>
   </div>
 </body>
-
 </html>
