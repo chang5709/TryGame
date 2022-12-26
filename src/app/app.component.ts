@@ -2,7 +2,6 @@ import { PartManager } from './@services/PartManager.class';
 import { Component } from '@angular/core';
 import { GameResult, PlayerType } from './@models/game.model';
 import { GameApiService } from './@services/game-api.service';
-import { Part } from './@services/Part.class';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +25,7 @@ export class AppComponent {
     else {
       if (this.partManager.parts[1].winner.length == this.partManager.parts[0].totalPlayers)
         return { gameResult: GameResult.Draw, resultString: "和局" }
-      else if (this.partManager.parts[1].winner.some(e => e.name =='Player1'))
+      else if (this.partManager.parts[1].winner.some(e => e.name == 'Player1'))
         return { gameResult: GameResult.Player, resultString: "P1贏了!" }
       else
         return { gameResult: GameResult.Bot, resultString: "P1輸了!" }
@@ -45,21 +44,26 @@ export class AppComponent {
         return { gameResult: GameResult.Bot, resultString: "P2輸了!" }
     }
   }
-
-
-  //Bot1出的拳
+  //Bot1出的拳 //TODO:可能可優化
   get lastBotPlayerType() {
+    let type = this.PlayerType.scissors
+    this.partManager.parts[1].list.forEach((value, key) => {
+      if (key.name == "Bot1")
+        type = value
+    })
     if (this.partManager.parts.length <= 1)
       return "Bot1"
     else
-      return this.playerTypeString.get(this.partManager.parts[1].botsTypes[0])
+      return this.playerTypeString.get(type)
+
+      // return this.playerTypeString.get(this.partManager.parts[1].botTypes[0])
   }
   //Bot2出的拳
   get lastBotPlayerType2() {
     if (this.partManager.parts.length <= 1)
       return "Bot2"
     else
-      return this.playerTypeString.get(this.partManager.parts[1].botsTypes[1])
+      return this.playerTypeString.get(this.partManager.parts[1].botTypes[1])
   }
   //玩家1資訊
   get Player1() {
@@ -73,7 +77,6 @@ export class AppComponent {
   get resultHistory() {
     return this.partManager.parts.slice(1, this.partManager.parts.length)
   }
-
 
 
   Play1(type: PlayerType) {

@@ -4,7 +4,7 @@ import { PlayerInfo } from './../PlayerInfo.class';
 export class Part {
   public totalPlayers: number = 0;
   private static random = [PlayerType.scissors, PlayerType.rock, PlayerType.paper]
-  private list: Map<PlayerInfo, PlayerType> = new Map<PlayerInfo, PlayerType>();
+  public list: Map<PlayerInfo, PlayerType> = new Map<PlayerInfo, PlayerType>();
   public winner: PlayerInfo[] = []
 
   //TODO:存storage嘗試
@@ -12,10 +12,17 @@ export class Part {
   playerTypes: PlayerType[] = []
   //-----------------
 
-
+  //TODO:嘗試把list與winner的playerInfo改成playerInfo.name
 
   constructor(playerCount: number, botCount: number) {
     this.totalPlayers = playerCount + botCount;
+
+    this.list.forEach((value, key)=>{
+      if(key.isBot)
+      this.botTypes.push(value)
+      else
+      this.playerTypes.push(value)
+    })
 
     for (let index = 0; index < botCount; index++) {
       this.AddBot(new PlayerInfo("Bot" + (index + 1), true))
@@ -71,7 +78,6 @@ export class Part {
         this.playerTypes.push(value)
       })
       //------------------------
-
 
       this.Start()
     }
@@ -136,14 +142,17 @@ export class Part {
       else if(typeScissors.length > 0 && typePaper.length > 0 ){
         winType = PlayerType.scissors;
       }
-      this.winner = this.GetPlayerType(winType)
+      // this.winner = this.GetPlayerType(winType)
       this.list.forEach((value, key)=>{
         //結算勝敗數增減
-        if(value == winType)
+        if(value == winType){
           key.IncreaseWin()
+          this.winner.push(key)
+        }
         else
           key.IncreaseLose()
       })
     }
+
   }
 }
