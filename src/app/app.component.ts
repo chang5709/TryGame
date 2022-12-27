@@ -2,6 +2,7 @@ import { PartManager } from './@services/PartManager.class';
 import { Component } from '@angular/core';
 import { GameResult, PlayerType } from './@models/game.model';
 import { GameApiService } from './@services/game-api.service';
+import { isNgTemplate } from '@angular/compiler';
 
 @Component({
   selector: 'app-root',
@@ -20,10 +21,10 @@ export class AppComponent {
 
   //玩家1結算畫面
   get playerResult() {
-    if (this.partManager.parts.length == 1)
+    if (this.partManager.parts.length <= 1)
       return { gameResult: GameResult.Draw, resultString: "你好!點擊上方按鈕選擇出拳" }
     else {
-      if (this.partManager.parts[1].winner.length == this.partManager.parts[0].totalPlayers)
+      if (this.partManager.parts[1].winner.length == this.partManager.parts[1].totalPlayers)
         return { gameResult: GameResult.Draw, resultString: "和局" }
       else if (this.partManager.parts[1].winner.some(e => e.name == 'Player1'))
         return { gameResult: GameResult.Player, resultString: "P1贏了!" }
@@ -33,10 +34,10 @@ export class AppComponent {
   }
   //玩家2結算畫面
   get playerResult2() {
-    if (this.partManager.parts.length == 1)
+    if (this.partManager.parts.length <= 1)
       return { gameResult: GameResult.Draw, resultString: "你好!點擊上方按鈕選擇出拳" }
     else {
-      if (this.partManager.parts[1].winner.length == this.partManager.parts[0].totalPlayers)
+      if (this.partManager.parts[1].winner.length == this.partManager.parts[1].totalPlayers)
         return { gameResult: GameResult.Draw, resultString: "和局" }
       else if (this.partManager.parts[1].winner.some(e => e.name == 'Player2'))
         return { gameResult: GameResult.Player, resultString: "P2贏了!" }
@@ -44,19 +45,12 @@ export class AppComponent {
         return { gameResult: GameResult.Bot, resultString: "P2輸了!" }
     }
   }
-  //Bot1出的拳 //TODO:可能可優化
+  //Bot1出的拳
   get lastBotPlayerType() {
-    let type = this.PlayerType.scissors
-    this.partManager.parts[1].list.forEach((value, key) => {
-      if (key.name == "Bot1")
-        type = value
-    })
     if (this.partManager.parts.length <= 1)
       return "Bot1"
     else
-      return this.playerTypeString.get(type)
-
-      // return this.playerTypeString.get(this.partManager.parts[1].botTypes[0])
+      return this.playerTypeString.get(this.partManager.parts[1].botTypes[0])
   }
   //Bot2出的拳
   get lastBotPlayerType2() {

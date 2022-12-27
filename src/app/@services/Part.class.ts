@@ -28,23 +28,34 @@ export class Part {
       this.AddBot(new PlayerInfo("Bot" + (index + 1), true))
     }
   }
-  //取機器人出的拳
-  get botsTypes(){
-    let bot:PlayerType[] = []
+  // //取機器人出的拳
+  // get botsTypes(){
+  //   let bot:PlayerType[] = []
+  //   this.list.forEach((value, key)=>{
+  //     if(key.isBot)
+  //       bot.push(value)
+  //   })
+  //   return bot
+  // }
+  // //取玩家出的拳
+  // get playersTypes(){
+  //   let player:PlayerType[] = []
+  //   this.list.forEach((value, key)=>{
+  //     if(!key.isBot)
+  //     player.push(value)
+  //   })
+  //   return player
+  // }
+
+
+  GetInfoByName(name: string){
+    let info!:PlayerInfo
     this.list.forEach((value, key)=>{
-      if(key.isBot)
-        bot.push(value)
+      if(name == key.name){
+        info = key
+      }
     })
-    return bot
-  }
-  //取玩家出的拳
-  get playersTypes(){
-    let player:PlayerType[] = []
-    this.list.forEach((value, key)=>{
-      if(!key.isBot)
-      player.push(value)
-    })
-    return player
+    return info
   }
 
 
@@ -107,6 +118,7 @@ export class Part {
 
 
   Start() {
+
     let typeScissors: PlayerInfo[] = this.GetPlayerType(PlayerType.scissors)
     let typeRock: PlayerInfo[] = this.GetPlayerType(PlayerType.rock)
     let typePaper: PlayerInfo[] = this.GetPlayerType(PlayerType.paper)
@@ -134,13 +146,13 @@ export class Part {
       //非平手，取勝者
       let winType!: PlayerType
       if(typeScissors.length > 0 && typeRock.length > 0 ){
-        winType = PlayerType.rock;
+        winType = PlayerType.rock
       }
       else if(typeRock.length > 0 && typePaper.length > 0 ){
-        winType = PlayerType.paper;
+        winType = PlayerType.paper
       }
       else if(typeScissors.length > 0 && typePaper.length > 0 ){
-        winType = PlayerType.scissors;
+        winType = PlayerType.scissors
       }
       // this.winner = this.GetPlayerType(winType)
       this.list.forEach((value, key)=>{

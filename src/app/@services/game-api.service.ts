@@ -15,8 +15,6 @@ export class GameApiService {
     this.partManager.Init(this.playerCount, this.botCount)
     this.partManager.NewPart()
   }
-  logList:{nowResult:GameResult, playerType: PlayerType, botType: PlayerType}[]= []
-  WinMap = new Map<GameResult, number>([[GameResult.Player, 0], [GameResult.Draw, 0], [GameResult.Bot, 0]])
 
   //玩家1出拳
   Play1(type: PlayerType){

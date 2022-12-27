@@ -53,19 +53,18 @@ export class PartManager {
       logJSON: logArray,
       winnerJSON: this.parts,
     }
-    localStorage.setItem('AllStorage', JSON.stringify(AllStorage))
+    localStorage.setItem('logStorage', JSON.stringify(AllStorage))
   }
 
 
   getStorage() {
-    let logStorage = localStorage.getItem('AllStorage');
+    let logStorage = localStorage.getItem('logStorage');
     if (logStorage != undefined) {
       let getStorage = JSON.parse(logStorage)
       this.parts = getStorage.winnerJSON
       for (var i = 0; i < this.parts.length; i++) {
         this.parts[i].list = new Map<PlayerInfo, PlayerType>(getStorage.logJSON[i])
       }
-
     }
   }
 }
