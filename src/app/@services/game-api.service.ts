@@ -1,4 +1,4 @@
-import { GameResult, PlayerType } from './../@models/game.model';
+import { PlayerType } from './../@models/game.model';
 import { Injectable } from '@angular/core';
 import { PartManager } from './PartManager.class';
 

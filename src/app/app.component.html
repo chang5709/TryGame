@@ -64,10 +64,10 @@
       <th class="message">對戰紀錄:</th>
       <tr class="message" *ngFor="let item of resultHistory; let i=index" >
         <td class="message">
-          {{ "Bot1出" + playerTypeString.get(item.botTypes[0]) }}
-          {{ "Bot2出" + playerTypeString.get(item.botTypes[1]) }}
-          {{ "P1出" + playerTypeString.get(item.playerTypes[0]) }}
-          {{ "P2出" + playerTypeString.get(item.playerTypes[1]) }}
+          {{ "Bot1出" + playerTypeString.get(item.list.get(GetInfoByName(item.list,"Bot1"))!) }}
+          {{ "Bot2出" + playerTypeString.get(item.list.get(GetInfoByName(item.list,"Bot2"))!) }}
+          {{ "P1出" + playerTypeString.get(item.list.get(GetInfoByName(item.list,"Player1"))!) }}
+          {{ "P2出" + playerTypeString.get(item.list.get(GetInfoByName(item.list,"Player2"))!) }}
           <b>
             <label *ngIf="item.winner.length == item.totalPlayers; else notDraw">
               和局

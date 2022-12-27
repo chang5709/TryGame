@@ -7,55 +7,11 @@ export class Part {
   public list: Map<PlayerInfo, PlayerType> = new Map<PlayerInfo, PlayerType>();
   public winner: PlayerInfo[] = []
 
-  //TODO:存storage嘗試
-  botTypes: PlayerType[] = []
-  playerTypes: PlayerType[] = []
-  //-----------------
-
-  //TODO:嘗試把list與winner的playerInfo改成playerInfo.name
-
   constructor(playerCount: number, botCount: number) {
     this.totalPlayers = playerCount + botCount;
-
-    this.list.forEach((value, key)=>{
-      if(key.isBot)
-      this.botTypes.push(value)
-      else
-      this.playerTypes.push(value)
-    })
-
     for (let index = 0; index < botCount; index++) {
       this.AddBot(new PlayerInfo("Bot" + (index + 1), true))
     }
-  }
-  // //取機器人出的拳
-  // get botsTypes(){
-  //   let bot:PlayerType[] = []
-  //   this.list.forEach((value, key)=>{
-  //     if(key.isBot)
-  //       bot.push(value)
-  //   })
-  //   return bot
-  // }
-  // //取玩家出的拳
-  // get playersTypes(){
-  //   let player:PlayerType[] = []
-  //   this.list.forEach((value, key)=>{
-  //     if(!key.isBot)
-  //     player.push(value)
-  //   })
-  //   return player
-  // }
-
-
-  GetInfoByName(name: string){
-    let info!:PlayerInfo
-    this.list.forEach((value, key)=>{
-      if(name == key.name){
-        info = key
-      }
-    })
-    return info
   }
 
 
@@ -79,19 +35,8 @@ export class Part {
     if (this.list.has(player))
       return;
     this.list.set(player, type);
-    if (this.list.size == this.totalPlayers) {
-
-      //TODO:存Storage嘗試
-      this.list.forEach((value, key)=>{
-        if(key.isBot)
-        this.botTypes.push(value)
-        else
-        this.playerTypes.push(value)
-      })
-      //------------------------
-
+    if (this.list.size == this.totalPlayers)
       this.Start()
-    }
   }
 
 
@@ -118,7 +63,6 @@ export class Part {
 
 
   Start() {
-
     let typeScissors: PlayerInfo[] = this.GetPlayerType(PlayerType.scissors)
     let typeRock: PlayerInfo[] = this.GetPlayerType(PlayerType.rock)
     let typePaper: PlayerInfo[] = this.GetPlayerType(PlayerType.paper)
@@ -165,6 +109,5 @@ export class Part {
           key.IncreaseLose()
       })
     }
-
   }
 }
