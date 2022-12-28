@@ -42,8 +42,6 @@ export class PlayerInfo {
       this.winCount = getStorage.winCount
       this.loseCount = getStorage.loseCount
       this.drawCount = getStorage.drawCount
-      //TODO: why can't
-      //this = getStorage
     }
   }
 
