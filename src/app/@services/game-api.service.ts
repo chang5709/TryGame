@@ -17,30 +17,14 @@ export class GameApiService {
     this.partManager.NewPart()
   }
 
-  get playerResult() {
+  //上一局勝者
+  get lastPartWinner() {
     if (this.partManager.parts.length <= 1)
-      return { gameResult: GameResult.Draw, resultString: "你好!點擊上方按鈕選擇出拳" }
-    else {
-      if (this.partManager.parts[1].winner.length == 0)
-        return { gameResult: GameResult.Draw, resultString: "和局" }
-      else if (this.partManager.parts[1].winner.some(e => e.name == 'Player1'))
-        return { gameResult: GameResult.Player, resultString: "P1贏了!" }
-      else
-        return { gameResult: GameResult.Bot, resultString: "P1輸了!" }
-    }
-  }
-  //玩家2結算畫面
-  get playerResult2() {
-    if (this.partManager.parts.length <= 1)
-      return { gameResult: GameResult.Draw, resultString: "你好!點擊上方按鈕選擇出拳" }
-    else {
-      if (this.partManager.parts[1].winner.length == 0)
-        return { gameResult: GameResult.Draw, resultString: "和局" }
-      else if (this.partManager.parts[1].winner.some(e => e.name == 'Player2'))
-        return { gameResult: GameResult.Player, resultString: "P2贏了!" }
-      else
-        return { gameResult: GameResult.Bot, resultString: "P2輸了!" }
-    }
+      return undefined
+    else if (this.partManager.parts[1].winner.length == 0)
+      return 0
+    else
+      return this.partManager.parts[1].winner
   }
 
   //Bot1出的拳
@@ -69,12 +53,9 @@ export class GameApiService {
   get resultHistory() {
     return this.partManager.parts
   }
-  get resultHistory2(){
-    return this.partManager.resultLog
+  get resultHistory2() {
+    return this.partManager.resultLog2
   }
-  // get winName(){
-  //   return this.partManager.partWinner
-  // }
 
   //畫面從list取value
   GetInfoByName(map: Map<PlayerInfo, PlayerType>, name: string): PlayerType | undefined {

@@ -8,18 +8,11 @@ export class Part {
   public winner: PlayerInfo[] = []
   public isSettle: boolean = false
 
-
   constructor(playerCount: number, botCount: number) {
     this.totalPlayers = playerCount + botCount;
     for (let index = 0; index < botCount; index++) {
       this.AddBot(new PlayerInfo("Bot" + (index + 1), true))
     }
-  }
-
-  GetBotPlayType() {
-    //item.list.get(GetInfoByName(item.list,"Bot1")
-    //item.GetBotPlayType
-
   }
 
 

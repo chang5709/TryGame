@@ -9,45 +9,51 @@ import { Part } from "./Part.class";
 
 export class PartManager {
 
-  players: PlayerInfo[] = []
-  parts: Part[] = []
-  playerCount: number = 0
-  botCount: number = 0
-
+  public players: PlayerInfo[] = []
+  //private resultLog: string[] = []
+  public parts: Part[] = []
+  private playerCount: number = 0
+  private botCount: number = 0
+  private _result:string[] = []
   playerTypeString = new Map<PlayerType, String>([[PlayerType.scissors, "剪刀 "], [PlayerType.rock, "石頭 "], [PlayerType.paper, "布 "]])
-  resultLog: string[] = []
-  partWinner: string[] = []
+
+  get nowPart(){
+    return this.parts[0]
+  }
+
+  get resultLog2(){
+    return this._result
+  }
+
+  set resultLog2(log:string[]){
+    this._result = log
+  }
 
   MakeLog() {
-    let winName = ""
-    if (this.parts.length > 1) {
-      if (this.parts[1].winner.length == 0)
+    let winName:string = ""
+      if (this.nowPart.winner.length == 0)
       winName = "和局"
       else {
-        let temp = ''
-        temp = "勝者為: "
-        for (let i = 0; i < this.parts[1].winner.length; i++) {
-          temp += this.parts[1].winner[i].name + " "
+        winName = "勝者為: "
+        for (let i = 0; i < this.nowPart.winner.length; i++) {
+          winName += this.nowPart.winner[i].name + " "
         }
-        winName = temp
       }
-
-      this.resultLog.unshift(
+      this._result.unshift(
         "Bot1出" + this.playerTypeString.get(this.GetInfoByName("Bot1")!) +
         "Bot2出" + this.playerTypeString.get(this.GetInfoByName("Bot2")!) +
         "P1出" + this.playerTypeString.get(this.GetInfoByName("Player1")!) +
         "P2出" + this.playerTypeString.get(this.GetInfoByName("Player2")!) +
         winName
       )
-      if(this.resultLog.length > 6){
-        this.resultLog.pop()
+      if(this.resultLog2.length > 5){
+        this.resultLog2.pop()
       }
-    }
   }
 
 
   GetInfoByName(name: string): PlayerType | undefined {
-    for (let key of this.parts[1].list)
+    for (let key of this.nowPart.list)
       if (name == key[0].name)
         return key[1]
     return undefined;
@@ -66,37 +72,24 @@ export class PartManager {
 
   NewPart() {
     this.parts.unshift(new Part(this.playerCount, this.botCount))
-    this.MakeLog()
-    //限制對戰紀錄上限 5 個 + 不顯示的 1 個
-    if (this.parts.length > 6) {
+    if (this.parts.length > 2) {
       this.parts.pop()
     }
-
   }
 
 
   PlayerType(playerNum: number, type: PlayerType) {
-    this.parts[0].Add(this.players[playerNum], type)
-    if (this.parts[0].isSettle) {
-      this.setInfoToStorage()
+    this.nowPart.Add(this.players[playerNum], type)
+    if (this.nowPart.isSettle) {
+      this.MakeLog()
       this.NewPart()
+      this.setInfoToStorage()
     }
   }
 
 
   setInfoToStorage() {
-    let logArray = []
-    for (var i = 0; i < this.parts.length; i++) {
-      logArray.push([...this.parts[i].list.entries()])
-    }
-    //logJSON = 每個part的list 取出拳紀錄用
-    //winnerJSON = 取parts
-    let AllStorage = {
-      logJSON: logArray,
-      winnerJSON: this.parts,
-    }
-    localStorage.setItem('logStorage', JSON.stringify(AllStorage))
-    localStorage.setItem('logStorage', JSON.stringify(AllStorage))
+    localStorage.setItem('logStorage', JSON.stringify(this._result))
   }
 
 
@@ -104,10 +97,7 @@ export class PartManager {
     let logStorage = localStorage.getItem('logStorage');
     if (logStorage != undefined) {
       let getStorage = JSON.parse(logStorage)
-      this.parts = getStorage.winnerJSON
-      for (var i = 0; i < this.parts.length; i++) {
-        this.parts[i].list = new Map<PlayerInfo, PlayerType>(getStorage.logJSON[i])
-      }
+      this._result = getStorage
     }
   }
 }

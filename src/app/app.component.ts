@@ -13,15 +13,33 @@ export class AppComponent {
   gameResult = GameResult;
   playerTypeString = new Map<PlayerType, String>([[PlayerType.scissors, "剪刀"], [PlayerType.rock, "石頭"], [PlayerType.paper, "布"]]);
 
-  constructor(public gameApiService: GameApiService) {}
+  constructor(public gameApiService: GameApiService) { }
 
   //玩家1結算畫面
   get playerResult() {
-    return this.gameApiService.playerResult
+    if (this.gameApiService.lastPartWinner == undefined)
+      return { gameResult: GameResult.Draw, resultString: "你好!點擊上方按鈕選擇出拳" }
+    else {
+      if (this.gameApiService.lastPartWinner == 0)
+        return { gameResult: GameResult.Draw, resultString: "和局" }
+      else if (this.gameApiService.lastPartWinner.some(e => e.name == 'Player1'))
+        return { gameResult: GameResult.Player, resultString: "P1贏了!" }
+      else
+        return { gameResult: GameResult.Bot, resultString: "P1輸了!" }
+    }
   }
   //玩家2結算畫面
   get playerResult2() {
-    return this.gameApiService.playerResult2
+    if (this.gameApiService.lastPartWinner == undefined)
+      return { gameResult: GameResult.Draw, resultString: "你好!點擊上方按鈕選擇出拳" }
+    else {
+      if (this.gameApiService.lastPartWinner == 0)
+        return { gameResult: GameResult.Draw, resultString: "和局" }
+      else if (this.gameApiService.lastPartWinner.some(e => e.name == 'Player2'))
+        return { gameResult: GameResult.Player, resultString: "P2贏了!" }
+      else
+        return { gameResult: GameResult.Bot, resultString: "P2輸了!" }
+    }
   }
   //Bot1出的拳
   get lastBotPlayerType() {
@@ -49,12 +67,9 @@ export class AppComponent {
   get resultHistory() {
     return this.gameApiService.resultHistory.slice(1, this.gameApiService.resultHistory.length)
   }
-  get resultHistory2(){
+  get resultHistory2() {
     return this.gameApiService.resultHistory2
   }
-  // get winName(){
-  //   return this.gameApiService.winName
-  // }
 
   //玩家1出拳按鈕
   Play1(type: PlayerType) {
