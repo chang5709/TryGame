@@ -10,7 +10,6 @@ import { Part } from "./Part.class";
 export class PartManager {
 
   public players: PlayerInfo[] = []
-  //private resultLog: string[] = []
   public parts: Part[] = []
   private playerCount: number = 0
   private botCount: number = 0
@@ -35,24 +34,23 @@ export class PartManager {
       winName = "和局"
       else {
         winName = "勝者為: "
-        for (let i = 0; i < this.nowPart.winner.length; i++) {
-          winName += this.nowPart.winner[i].name + " "
-        }
+        this.nowPart.winner.forEach(item => {
+          winName += item.name + " "
+        })
       }
       this._result.unshift(
-        "Bot1出" + this.playerTypeString.get(this.GetInfoByName("Bot1")!) +
-        "Bot2出" + this.playerTypeString.get(this.GetInfoByName("Bot2")!) +
-        "P1出" + this.playerTypeString.get(this.GetInfoByName("Player1")!) +
-        "P2出" + this.playerTypeString.get(this.GetInfoByName("Player2")!) +
+        "Bot1出" + this.playerTypeString.get(this.GetTypeByName("Bot1")!) +
+        "Bot2出" + this.playerTypeString.get(this.GetTypeByName("Bot2")!) +
+        "P1出" + this.playerTypeString.get(this.GetTypeByName("Player1")!) +
+        "P2出" + this.playerTypeString.get(this.GetTypeByName("Player2")!) +
         winName
       )
-      if(this.resultLog2.length > 5){
+      if(this.resultLog2.length > 5)
         this.resultLog2.pop()
-      }
   }
 
 
-  GetInfoByName(name: string): PlayerType | undefined {
+  GetTypeByName(name: string): PlayerType | undefined {
     for (let key of this.nowPart.list)
       if (name == key[0].name)
         return key[1]

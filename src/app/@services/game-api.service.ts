@@ -30,14 +30,14 @@ export class GameApiService {
   //Bot1出的拳
   get lastBotPlayerType() {
     if (this.partManager.parts.length > 1)
-      return this.GetInfoByName(this.partManager.parts[1].list, "Bot1")
+      return this.GetTypeByName(this.partManager.parts[1].list, "Bot1")
     else
       return undefined
   }
   //Bot2出的拳
   get lastBotPlayerType2() {
     if (this.partManager.parts.length > 1)
-      return this.GetInfoByName(this.partManager.parts[1].list, "Bot2")
+      return this.GetTypeByName(this.partManager.parts[1].list, "Bot2")
     else
       return undefined
   }
@@ -58,7 +58,7 @@ export class GameApiService {
   }
 
   //畫面從list取value
-  GetInfoByName(map: Map<PlayerInfo, PlayerType>, name: string): PlayerType | undefined {
+  GetTypeByName(map: Map<PlayerInfo, PlayerType>, name: string): PlayerType | undefined {
     for (let key of map)
       if (name == key[0].name)
         return key[1]
